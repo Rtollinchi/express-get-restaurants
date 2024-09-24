@@ -29,11 +29,7 @@ app.get("/restaurants/:id", async (req, res, next) => {
 
 app.post("/restaurants", async (req, res, next) => {
   try {
-    const newRestaurant = await Restaurant.create({
-      name: req.body.name,
-      location: req.body.location,
-      cuisine: req.body.cuisine,
-    });
+    const newRestaurant = await Restaurant.create(req.body);
     res.json(newRestaurant);
   } catch (error) {
     next(error);
@@ -42,11 +38,8 @@ app.post("/restaurants", async (req, res, next) => {
 
 app.put("/restaurants/:id", async (req, res, next) => {
   try {
-    const updatedRestaurant = await Restaurant.findByPk(req.params.id);
-    await updatedRestaurant.update({
-      name: req.body.name,
-      location: req.body.location,
-      cuisine: req.body.cuisine,
+    const updatedRestaurant = await Restaurant.update(req.body, {
+      where: { id: req.params.id },
     });
     res.json(updatedRestaurant);
   } catch (error) {
@@ -56,8 +49,9 @@ app.put("/restaurants/:id", async (req, res, next) => {
 
 app.delete("/restaurants/:id", async (req, res, next) => {
   try {
-    const deletedRestaurant = await Restaurant.findByPk(req.params.id);
-    await deletedRestaurant.destroy();
+    const deletedRestaurant = await Restaurant.destroy({
+      where: { id: req.params.id },
+    });
     res.json(deletedRestaurant);
   } catch (error) {
     next(error);
