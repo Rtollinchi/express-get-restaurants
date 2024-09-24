@@ -54,4 +54,14 @@ app.put("/restaurants/:id", async (req, res, next) => {
   }
 });
 
+app.delete("/restaurants/:id", async (req, res, next) => {
+  try {
+    const deletedRestaurant = await Restaurant.findByPk(req.params.id);
+    await deletedRestaurant.destroy();
+    res.json(deletedRestaurant);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = app;
