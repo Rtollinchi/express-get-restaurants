@@ -9,6 +9,8 @@ const { seedRestaurant } = require("../seedData");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/restaurants", restaurantRouter);
+
 app.get("/restaurants", async (req, res, next) => {
   try {
     const allRestaurants = await Restaurant.findAll();
