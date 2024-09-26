@@ -60,6 +60,26 @@ describe("unit tests for GET and POST routes", () => {
     expect(response.body.error[0].msg).toBe("Invalid value");
   });
 
+  test("Should return an error if location field is missing", async () => {
+    const response = await request(app).post("/restaurants").send({
+      name: "Black Bird",
+      location: "",
+      cuisine: "American",
+    });
+
+    expect(response.body.error[0].msg).toBe("Invalid value");
+  });
+
+  test("Should return an error if cuisine field is missing", async () => {
+    const response = await request(app).post("/restaurants").send({
+      name: "Black Bird",
+      location: "Wantagh",
+      cuisine: "",
+    });
+
+    expect(response.body.error[0].msg).toBe("Invalid value");
+  });
+
   test("test PUT /restaurant updates the restaurant array", async () => {
     await request(app)
       .put("/restaurants/4")
@@ -77,6 +97,6 @@ describe("unit tests for GET and POST routes", () => {
 
     const allRestaurants = await request(app).get("/restaurants");
 
-    expect(allRestaurants.body.length).toBe(4);
+    expect(allRestaurants.body.length).toBe(6);
   });
 });
