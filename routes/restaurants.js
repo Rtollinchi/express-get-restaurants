@@ -1,6 +1,8 @@
 const express = require("express");
 const Restaurant = require("../models/Restaurant");
+const e = require("express");
 const router = express.Router();
+const { check, validationResult } = require("express-validator");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -20,15 +22,27 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
-  try {
-    const newRestaurant = await Restaurant.create(req.body);
+router.post(
+  "/",
+  [
+    check("name").not().isEmpty().trim(),
+    check("location").not().isEmpty().trim(),
+    check("cuisine").not().isEmpty().trim(),
+  ],
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
 
-    res.json(newRestaurant);
-  } catch (error) {
-    next(error);
+      if (!errors.isEmpty()) {
+        res.json({ error: errors.array() });
+      }
+      const newRestaurant = await Restaurant.create(req.body);
+      res.json(newRestaurant);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.put("/:id", async (req, res, next) => {
   try {

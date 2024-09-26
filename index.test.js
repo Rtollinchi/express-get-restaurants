@@ -38,13 +38,26 @@ describe("unit tests for GET and POST routes", () => {
   });
 
   test("test POST /restaurants returns updated array", async () => {
-    const addRestaurant = await request(app)
+    const response = await request(app)
       .post("/restaurants")
       .send({ name: "Black Bird", location: "Wantagh", cuisine: "American" });
 
     const allRestaurants = await request(app).get("/restaurants");
 
     expect(allRestaurants.body.length).toBe(4);
+    expect(response.body.name).toBe("Black Bird");
+    expect(response.body.location).toBe("Wantagh");
+    expect(response.body.cuisine).toBe("American");
+  });
+
+  test("Should return an error if name field is missing", async () => {
+    const response = await request(app).post("/restaurants").send({
+      name: "",
+      location: "Wantagh",
+      cuisine: "American",
+    });
+
+    expect(response.body.error[0].msg).toBe("Invalid value");
   });
 
   test("test PUT /restaurant updates the restaurant array", async () => {
@@ -64,6 +77,6 @@ describe("unit tests for GET and POST routes", () => {
 
     const allRestaurants = await request(app).get("/restaurants");
 
-    expect(allRestaurants.body.length).toBe(3);
+    expect(allRestaurants.body.length).toBe(4);
   });
 });
