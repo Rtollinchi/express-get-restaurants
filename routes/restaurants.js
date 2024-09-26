@@ -1,5 +1,5 @@
 const express = require("express");
-const { Restaurant } = require("../models");
+const Restaurant = require("../models/Restaurant");
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
@@ -42,7 +42,7 @@ router.put("/:id", async (req, res, next) => {
 });
 
 router.delete("/:id", async (req, res, next) => {
-  await Restaurant.destroy({where: {id: req.params.id}});
+  await Restaurant.destroy({ where: { id: req.params.id } });
 
   const updatedRestaurants = await Restaurant.findAll();
   res.json(updatedRestaurants);
